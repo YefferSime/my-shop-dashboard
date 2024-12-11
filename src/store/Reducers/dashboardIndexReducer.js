@@ -6,21 +6,22 @@ import axios from 'axios'
 export const get_seller_dashboard_index_data = createAsyncThunk(
     'dashboardIndex/get_seller_dashboard_index_data',
     async (_, { rejectWithValue, fulfillWithValue, getState }) => {
-        const {token}=getState().auth
+        const { token } = getState().auth;
         const config = {
-            Headers:{
-                Authorization:`Bearer ${token}`
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        }
+        };
         try {
-            const { data } = await axios.get(`${base_url}/api/seller/get-dashboard-index-data`,config )
-            console.log(data)
-            return fulfillWithValue(data)
+            const { data } = await axios.get(`${base_url}/api/seller/get-dashboard-index-data`, config);
+            console.log(data);
+            return fulfillWithValue(data);
         } catch (error) {
-            return rejectWithValue(error.response.data)
+            return rejectWithValue(error.response.data);
         }
     }
-)
+);
+
 
 export const get_admin_dashboard_index_data = createAsyncThunk(
     'dashboardIndex/get_admin_dashboard_index_data',

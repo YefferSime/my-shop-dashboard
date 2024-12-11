@@ -104,21 +104,22 @@ export const profile_info_add = createAsyncThunk(
 
 export const get_user_info = createAsyncThunk(
     'auth/get_user_info',
-    async (_, { rejectWithValue, fulfillWithValue, getState}) => {
-        const {token} = getState().auth
+    async (_, { rejectWithValue, fulfillWithValue, getState }) => {
+        const { token } = getState().auth;
         const config = {
-            headers:{
-                Authorization : `Bearer ${token}`
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        }
+        };
         try {
-            const { data } = await axios.get(`${base_url}/api/get-user`,config )
-            return fulfillWithValue(data)
+            const { data } = await axios.get(`${base_url}/api/get-user`, config);
+            return fulfillWithValue(data);
         } catch (error) {
-            return rejectWithValue(error.response.data)
+            return rejectWithValue(error.response.data);
         }
     }
-)
+);
+
 
 const returnRole = (token) => {
     if (token) {
