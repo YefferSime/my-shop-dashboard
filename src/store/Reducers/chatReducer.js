@@ -1,130 +1,99 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { base_url } from '../../utils/config';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import api from '../../api/api'
 
-// Acción para obtener clientes
 export const get_customers = createAsyncThunk(
     'chat/get_customers',
-    async (sellerId, { rejectWithValue, fulfillWithValue, getState }) => {
-        const { token } = getState().auth;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-        };
+    async (sellerId, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await axios.get(`${base_url}/chat/seller/get-customers/${sellerId}`, config);
-            return fulfillWithValue(data);
+            const { data } = await api.get(`/chat/seller/get-customers/${sellerId}`, { withCredentials: true })
+            return fulfillWithValue(data)
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data)
         }
     }
-);
+)
 
-// Acción para obtener mensajes de un cliente
 export const get_customer_message = createAsyncThunk(
     'chat/get_customer_message',
-    async (customerId, { rejectWithValue, fulfillWithValue, getState }) => {
-        const { token } = getState().auth;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-        };
+    async (customerId, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await axios.get(`${base_url}/chat/seller/get-customer-message/${customerId}`, config);
-            return fulfillWithValue(data);
+            const { data } = await api.get(`/chat/seller/get-customer-message/${customerId}`, { withCredentials: true })
+            return fulfillWithValue(data)
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data)
         }
     }
-);
+)
 
-// Acción para enviar un mensaje
 export const send_message = createAsyncThunk(
     'chat/send_message',
-    async (info, { rejectWithValue, fulfillWithValue, getState }) => {
-        const { token } = getState().auth;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-        };
+    async (info, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await axios.post(`${base_url}/chat/seller/send-message-to-customer`, info, config);
-            return fulfillWithValue(data);
+            const { data } = await api.post(`/chat/seller/send-message-to-customer`, info, { withCredentials: true })
+            return fulfillWithValue(data)
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data)
         }
     }
-);
+)
 
-// Acción para obtener vendedores
+
 export const get_sellers = createAsyncThunk(
     'chat/get_sellers',
-    async (_, { rejectWithValue, fulfillWithValue, getState }) => {
-        const { token } = getState().auth;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-        };
+    async (_, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await axios.get(`${base_url}/chat/admin/get-sellers`, config);
-            return fulfillWithValue(data);
+            const { data } = await api.get(`/chat/admin/get-sellers`, { withCredentials: true })
+            console.log(data)
+            return fulfillWithValue(data)
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data)
         }
     }
-);
+)
 
-// Acción para enviar un mensaje entre vendedor y admin
+
 export const send_message_seller_admin = createAsyncThunk(
     'chat/send_message_seller_admin',
-    async (info, { rejectWithValue, fulfillWithValue, getState }) => {
-        const { token } = getState().auth;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-        };
+    async (info, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await axios.post(`${base_url}/chat/message-send-seller-admin`, info, config);
-            return fulfillWithValue(data);
+            const { data } = await api.post(`/chat/message-send-seller-admin`, info, { withCredentials: true })
+            return fulfillWithValue(data)
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data)
         }
     }
-);
+)
 
-// Acción para obtener mensajes de admin
+
 export const get_admin_message = createAsyncThunk(
     'chat/get_admin_message',
-    async (receiverId, { rejectWithValue, fulfillWithValue, getState }) => {
-        const { token } = getState().auth;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-        };
+    async (receverId, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await axios.get(`${base_url}/chat/get-admin-messages/${receiverId}`, config);
-            return fulfillWithValue(data);
+            const { data } = await api.get(`/chat/get-admin-messages/${receverId}`, { withCredentials: true })
+            return fulfillWithValue(data)
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data)
         }
     }
-);
+)
 
-// Reducer de chat
+export const get_seller_message = createAsyncThunk(
+    'chat/get_seller_message',
+    async (receverId, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const { data } = await api.get(`/chat/get-seller-messages`, { withCredentials: true })
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+
+
+
 export const chatReducer = createSlice({
-    name: 'chat',
+    name: 'seller',
     initialState: {
         successMessage: '',
         errorMessage: '',
@@ -133,80 +102,75 @@ export const chatReducer = createSlice({
         activeCustomer: [],
         activeSellers: [],
         messageNotification: [],
-        activeAdmin: '',
+        activeAdmin: "",
         friends: [],
         seller_admin_message: [],
         currentSeller: {},
         currentCustomer: {},
-        sellers: [],
+        sellers: []
     },
     reducers: {
-        messageClear: (state) => {
-            state.errorMessage = '';
-            state.successMessage = '';
+        messageClear: (state, _) => {
+            state.errorMessage = ""
+            state.successMessage = ""
         },
         updateMessage: (state, { payload }) => {
-            state.messages = [...state.messages, payload];
+            state.messages = [...state.messages, payload]
         },
         updateCustomer: (state, { payload }) => {
-            state.activeCustomer = payload;
+            state.activeCustomer = payload
         },
         updateSellers: (state, { payload }) => {
-            state.activeSellers = payload;
+            state.activeSellers = payload
         },
         updateAdminMessage: (state, { payload }) => {
-            state.seller_admin_message = [...state.seller_admin_message, payload];
+            state.seller_admin_message = [...state.seller_admin_message, payload]
         },
         updateSellerMessage: (state, { payload }) => {
-            state.seller_admin_message = [...state.seller_admin_message, payload];
+            state.seller_admin_message = [...state.seller_admin_message, payload]
         },
         activeStatus_update: (state, { payload }) => {
-            state.activeAdmin = payload.status;
-        },
+            state.activeAdmin = payload.status
+        }
     },
     extraReducers: {
+
         [get_customers.fulfilled]: (state, { payload }) => {
-            state.customers = payload.customers;
+            state.customers = payload.customers
         },
         [get_customer_message.fulfilled]: (state, { payload }) => {
-            state.messages = payload.messages;
-            state.currentCustomer = payload.currentCustomer;
+            state.messages = payload.messages
+            state.currentCustomer = payload.currentCustomer
         },
         [send_message.fulfilled]: (state, { payload }) => {
-            const tempFriends = state.customers;
-            const index = tempFriends.findIndex((f) => f.fdId === payload.message.receiverId);
+            let tempFriends = state.customers
+            let index = tempFriends.findIndex(f => f.fdId === payload.message.receverId)
             while (index > 0) {
-                const temp = tempFriends[index];
-                tempFriends[index] = tempFriends[index - 1];
-                tempFriends[index - 1] = temp;
-                index--;
+                let temp = tempFriends[index]
+                tempFriends[index] = tempFriends[index - 1]
+                tempFriends[index - 1] = temp
+                index--
             }
-            state.customers = tempFriends;
-            state.messages = [...state.messages, payload.message];
-            state.successMessage = 'Message sent successfully';
+            state.customers = tempFriends
+            state.messages = [...state.messages, payload.message]
+            state.successMessage = ' message send success'
         },
         [get_sellers.fulfilled]: (state, { payload }) => {
-            state.sellers = payload.sellers;
+            state.sellers = payload.sellers
         },
         [send_message_seller_admin.fulfilled]: (state, { payload }) => {
-            state.seller_admin_message = [...state.seller_admin_message, payload.message];
-            state.successMessage = 'Message sent successfully';
+            state.seller_admin_message = [...state.seller_admin_message, payload.message]
+            state.successMessage = 'message send success'
         },
         [get_admin_message.fulfilled]: (state, { payload }) => {
-            state.seller_admin_message = payload.messages;
-            state.currentSeller = payload.currentSeller;
+            state.seller_admin_message = payload.messages
+            state.currentSeller = payload.currentSeller
         },
-    },
-});
+        [get_seller_message.fulfilled]: (state, { payload }) => {
+            state.seller_admin_message = payload.messages
+        },
+    }
 
-export const {
-    messageClear,
-    updateMessage,
-    updateCustomer,
-    updateSellers,
-    updateAdminMessage,
-    updateSellerMessage,
-    activeStatus_update,
-} = chatReducer.actions;
-
-export default chatReducer.reducer;
+})
+export const { messageClear, updateMessage, updateCustomer, updateSellers, updateAdminMessage, updateSellerMessage, activeStatus_update } = chatReducer.actions
+export default chatReducer.reducer
